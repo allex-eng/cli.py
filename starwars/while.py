@@ -11,9 +11,9 @@
    O valor 0 digitado não deve ser considerado em nenhum dos itens acima.
 '''
 
-intValor          = None
+intValor = None
 intSomaPositivos  = 0
-intQtValores      = 0
+intQtValores  = 0
 intQtValPositivos = 0
 
 while intValor != 0:
