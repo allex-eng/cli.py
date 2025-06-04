@@ -4,9 +4,10 @@ try:
     n = int(input('Digite o número de termos: '))
 
     if n <= 0:
-        print("só valores positivos!.")
+        print("Só valores positivos!")
     elif r == 0:
         print('A P.A. é constante')
+        soma = a1 * n
     else:
         if r > 0:
             print('A P.A. é crescente')
@@ -18,5 +19,8 @@ try:
             if i == n:
                 print(f"O {n}º termo da P.A. é {termo}")
 
+        soma = (a1 + termo) * n // 2
+        print(f'A soma dos {n} termos é {soma}')
+
 except ValueError:
-    print("Erro: você deve digitar apenas números.")
+    print("Erro: digite um número inteiro válido.")
