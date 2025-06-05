@@ -8,7 +8,7 @@ try:
     else:
         
         if a1 == 0:
-            print("A P.G. é singular (todos os termos são zero).")
+            print("A P.G. é singular .")
         elif q == 1:
             print("A P.G. é constante.")
         elif q == 0 and a1 != 0:
