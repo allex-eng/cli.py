@@ -9,7 +9,7 @@ try:
     if qtd <= 0:
         print("Erro: a quantidade de termos deve ser maior que zero.")
     else:
-        print("\nValores da P.A.:")
+        print("Valores da P.A.:")
         for i in range(qtd):
             termo = a1 + i * r
             print(f"Termo {i + 1}: {termo}")
