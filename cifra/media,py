@@ -1,0 +1,41 @@
+lstAlunos = list()
+
+while True:
+    strNome = input('Digite um nome: ').strip()
+    
+    if strNome.lower() == 'fim':
+        break
+
+    while True:
+        try:
+            intNota_1 = int(input('Digite a Nota 1: '))
+            intNota_2 = int(input('Digite a Nota 2: '))
+
+            if not (0 <= intNota_1 <= 100):
+                print('ERRO: Nota 1 inválida. Informe entre 0 e 100...')
+                continue
+            if not (0 <= intNota_2 <= 100):
+                print('ERRO: Nota 2 inválida. Informe entre 0 e 100...')
+                continue
+
+            # Cálculo da média simples (IFRN)
+            media = (intNota_1 + intNota_2) / 2
+
+            # Armazenar tudo em uma só lista
+            lstAlunos.append({
+                'nome': strNome,
+                'nota1': intNota_1,
+                'nota2': intNota_2,
+                'media': media
+            })
+            break  # Sai do laço de notas
+
+        except ValueError:
+            print('ERRO: Informe um inteiro válido...')
+        except Exception as e:
+            print(f'ERRO: {e}')
+
+# Impressão final dos dados
+print("\nResumo dos alunos cadastrados:")
+for aluno in lstAlunos:
+    print(f"Nome: {aluno['nome']}, Nota 1: {aluno['nota1']}, Nota 2: {aluno['nota2']}, Média: {aluno['media']:.2f}")
