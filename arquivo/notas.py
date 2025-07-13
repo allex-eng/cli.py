@@ -2,48 +2,48 @@ import csv
 import statistics
 from datetime import datetime
 from collections import defaultdict
-import os
+from calendar import month_name
 
-# Nome do arquivo de entrada
-nome_arquivo = 'cotacao_dolar.csv'
-
-# 1) Ler o arquivo e montar a lista de sublistas
+# 1) Ler o arquivo cotacao_dolar.csv e transformar em lista de sublistas
 dados = []
-with open(nome_arquivo, 'r', encoding='utf-8') as f:
+with open('cotacao_dolar.csv', newline='', encoding='utf-8') as f:
     leitor = csv.reader(f, delimiter=';')
     for linha in leitor:
-        valor1 = float(linha[0])
-        valor2 = float(linha[1])
-        data = datetime.strptime(linha[2], '%Y-%m-%d').date()
-        dados.append([valor1, valor2, data])
+        if not linha or len(linha) < 3:
+            continue  # Ignora linhas incompletas
+        try:
+            valor1 = float(linha[0].replace(',', '.'))
+            valor2 = float(linha[1].replace(',', '.'))
+            data = datetime.strptime(linha[2], "%Y-%m-%d").date()
+            dados.append([valor1, valor2, data])
+        except ValueError:
+            continue  # Ignora linhas com dados inválidos
 
-# 2) Gerar arquivos por ano
-anos = defaultdict(list)
+# 2) Gerar arquivos para cada ano
+por_ano = defaultdict(list)
 for linha in dados:
     ano = linha[2].year
-    anos[ano].append(linha)
+    por_ano[ano].append(linha)
 
-base_nome, ext = os.path.splitext(nome_arquivo)
-for ano, linhas in anos.items():
-    nome_ano = f"{base_nome}_{ano}{ext}"
-    with open(nome_ano, 'w', encoding='utf-8', newline='') as f:
+for ano, linhas in por_ano.items():
+    nome_arquivo = f"cotacao_dolar_{ano}.csv"
+    with open(nome_arquivo, 'w', newline='', encoding='utf-8') as f:
         escritor = csv.writer(f, delimiter=';')
-        for v1, v2, data in linhas:
-            escritor.writerow([f"{v1:.2f}", f"{v2:.2f}", data.isoformat()])
+        for l in linhas:
+            escritor.writerow([f"{l[0]:.2f}", f"{l[1]:.2f}", l[2]])
 
-# 3) Gerar médias mensais por ano com statistics.mean
-dados_ano_mes = defaultdict(lambda: defaultdict(list))
-for v1, v2, data in dados:
-    media_diaria = (v1 + v2) / 2
-    ano = data.year
-    mes = data.month
-    dados_ano_mes[ano][mes].append(media_diaria)
-
-for ano, meses in dados_ano_mes.items():
+# 3) Gerar arquivos por ano com médias mensais usando statistics.mean
+for ano, linhas in por_ano.items():
+    medias_por_mes = defaultdict(list)
+    for l in linhas:
+        mes = l[2].month
+        media_dia = (l[0] + l[1]) / 2
+        medias_por_mes[mes].append(media_dia)
+    
     nome_saida = f"media_cotacao_{ano}.csv"
-    with open(nome_saida, 'w', encoding='utf-8', newline='') as f:
+    with open(nome_saida, 'w', newline='', encoding='utf-8') as f:
         escritor = csv.writer(f, delimiter=';')
-        for mes in sorted(meses):
-            media_mensal = statistics.mean(meses[mes])
-            nome_mes = datetime(ano, mes, 1).strftime('%B')  # Nome do mês por extenso
-            escritor.writerow([nome_mes, f"{media_mensal:.4f}"])
+        for mes in sorted(medias_por_mes.keys()):
+            nome_mes = month_name[mes]  # Nome do mês (em inglês)
+            media_mensal = statistics.mean(medias_por_mes[mes])
+            escritor.writerow([nome_mes, f"{media_mensal:.2f}"])
