@@ -31,6 +31,3 @@ intip = int.from_bytes(bytes([int(x) for x in ip.split('.')]), 'big')
 mark = 0xFFFFFFFF >> (32 - cidr) << (32 - cidr)
 
 
-print(f'Máscara de sub-rede como inteiro..........: {mark}\n')
-
-print(f'Máscara de sub-rede em binário é (32 bits): {mark:032b}\n')
